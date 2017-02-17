@@ -1,11 +1,11 @@
 {
-  "port": 3001,
-  "appPort": 8080,
-  "host": "localhost:3001",
+  "port": 3005,
+  "appPort": 8005,
+  "host": "0.0.0.0:3005",
   "protocol": "http",
-  "domain": "http://localhost:3001",
+  "domain": "http://0.0.0.0:3005",
   "basePath": "",
-  "mongo": "mongodb://localhost:27017/formioapp",
+  "mongo": "mongodb://localhost:27017/speedyapp",
   "mongoSecret": "--- change me now ---",
   "reservedForms": ["submission", "exists", "export", "role", "current", "logout", "import", "form", "access"],
   "jwt": {

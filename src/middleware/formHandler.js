@@ -28,7 +28,7 @@ module.exports = function(router) {
       formio.util.eachComponent(req.body.components, function(component) {
         // Remove all unsupported characters from api keys.
         if (component.hasOwnProperty('key')) {
-          component.key = component.key.replace(badCharacters, '');
+//          component.key = component.key.replace(badCharacters, '');
         }
         if (component.key === '' && !formio.util.isLayoutComponent(component)) {
           error = true;

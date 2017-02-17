@@ -50,26 +50,6 @@ module.exports = function(options) {
 
   // Mount the client application.
   app.use('/', express.static(__dirname + '/client/dist'));
-//add CORS support
-app.use(function (req, res, next) {
-
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-    // Request headers you wish to allow
-   // res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
-    // Pass to next layer of middleware
-    next();
-});
-
 
   // Load the form.io server.
   var server = options.server || require('./index')(config);
@@ -82,32 +62,8 @@ app.use(function (req, res, next) {
       // Start the application.
       if (fs.existsSync('app')) {
         var application = express();
-//cors
-application.use(function (req, res, next) {
-
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
-    // Pass to next layer of middleware
-    next();
-});
-
-//end cors
-
-
         application.use('/', express.static(__dirname + '/app/dist'));
-
-       config.appPort = config.appPort || 8080;
+        config.appPort = config.appPort || 8080;
         application.listen(config.appPort);
         var appHost = 'http://0.0.0.0:' + config.appPort;
         util.log(' > Serving application at ' + appHost.green);

@@ -67,10 +67,11 @@ module.exports = function(formio) {
     })
   });
 
-  // Validate the name.
+  // Validate the name. comment out the validations
   var invalidRegex = /[^0-9a-zA-Z\-\/]|^\-|\-$|^\/|\/$/;
-  model.schema.path('name').validate(function(name, done) {
-    return done(!invalidRegex.test(name));
+ model.schema.path('name').validate(function(name, done) {
+  //  return done(!invalidRegex.test(name));
+	return true;
   }, 'The Name may only contain letters, numbers, hyphens, and forward slashes (but cannot start or end with a hyphen '
       + 'or forward slash)');
 
@@ -161,10 +162,11 @@ module.exports = function(formio) {
 
   // Validate component keys have valid characters
   model.schema.path('components').validate(function(components) {
-    var validRegex = /^[A-Za-z]+[A-Za-z0-9\-.]*$/g;
-    return componentKeys(components).every(function(key) {
-      return key.match(validRegex);
-    });
+ //   var validRegex = /^[A-Za-z]+[A-Za-z0-9\-.]*$/g;
+   // return componentKeys(components).every(function(key) {
+     // return key.match(validRegex);
+   // });
+	return true;
   }, 'A component on this form has an invalid or missing API key. Keys must only contain alphanumeric characters or '
       + 'hyphens, and must start with a letter. Please check each component\'s API Property Name.'
   );
