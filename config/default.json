@@ -3,9 +3,9 @@
   "appPort": 8005,
   "host": "0.0.0.0:3005",
   "protocol": "http",
-  "domain": "http://0.0.0.0:3005",
+  "domain": "http://35.161.117.208:3005",
   "basePath": "",
-  "mongo": "mongodb://localhost:27017/speedyapp",
+  "mongo": "mongodb://localhost:27017/speedyapp1",
   "mongoSecret": "--- change me now ---",
   "reservedForms": ["submission", "exists", "export", "role", "current", "logout", "import", "form", "access"],
   "jwt": {
