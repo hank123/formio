@@ -28,6 +28,7 @@ You can then download this repository, navigate to the folder in your Terminal, 
 
 ```
 npm install
+edit config/default.json, update "domain" to use you server IP address
 node main
 ```
 
