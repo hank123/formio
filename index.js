@@ -136,6 +136,11 @@ module.exports = function(config) {
         router.use(router.formio.middleware.permissionHandler);
       }
 
+      // The Elasticsearch Handler.
+      if (!router.formio.hook.invoke('init', 'elasticsearch', router.formio)) {
+          router.use(router.formio.middleware.elasticsearchHandler);
+      }
+
       // Allow libraries to use a single instance of mongoose.
       router.formio.mongoose = mongoose;
 

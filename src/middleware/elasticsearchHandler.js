@@ -32,10 +32,8 @@ module.exports = function(router) {
         }, function (error) {
             if (error) {
                 console.error('elasticsearch cluster is down!');
-                next();
             } else {
                 console.log('All is well');
-                next();
             }
         });
 
@@ -48,6 +46,7 @@ module.exports = function(router) {
             if (exists === true) {
                 //return res.status(400).send('Could not create the same Forms data.');
                 //req.body.data = value;
+                next();
             } else {
                 // Adds a typed JSON document in a specific index, making it searchable.
                 // If a document with the same index, type, and id already exists, an error will occur.
@@ -62,7 +61,7 @@ module.exports = function(router) {
                     }
                 }, function (err, value) {
                     if (err) {
-                        //return res.status(400).json(err);
+                        return res.status(400).json(err);
                     }
 
                     // Reset the value to what the create returns.
