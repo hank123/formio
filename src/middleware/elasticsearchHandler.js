@@ -1,5 +1,8 @@
 'use strict';
 
+var mongoose = require('mongoose');
+var ObjectId = mongoose.Types.ObjectId;
+var randomInt = require('random-int');
 var debug = require('debug')('formio:middleware:elasticsearchHandler');
 
 /**
@@ -37,38 +40,48 @@ module.exports = function(router) {
             }
         });
 
-        // Returns a boolean indicating whether or not a given document exists.
-        client.exists({
-            index: 'myindex',
-            type: 'mytype',
-            id: '101'
-        }, function (error, exists, value) {
-            if (exists === true) {
-                //return res.status(400).send('Could not create the same Forms data.');
-                //req.body.data = value;
-                next();
-            } else {
-                // Adds a typed JSON document in a specific index, making it searchable.
-                // If a document with the same index, type, and id already exists, an error will occur.
-                client.create({
-                    index: 'myindex',
-                    type: 'mytype',
-                    id: '101',
-                    body: {
-                        name: "MikeBL",
-                        age: 33,
-                        info: "How about id 101"
-                    }
-                }, function (err, value) {
-                    if (err) {
-                        return res.status(400).json(err);
-                    }
-
-                    // Reset the value to what the create returns.
+        if (req.method === 'POST' || req.method === 'PUT') {
+            // Returns a boolean indicating whether or not a given document exists.
+            client.exists({
+                index: 'myindex',
+                type: 'mytype',
+                id: req.subId
+            }, function (error, exists, value) {
+                if (exists === true && req.subId != null && req.subId != '') {
+                    //return res.status(400).send('Could not create the same Forms data.');
                     //req.body.data = value;
-                });
-            }
-        });
+                    next();
+                } else {
+                    if (req.body.data.container1 != null) {
+                        var req_id = (req.subId == null || req.subId == '') ? randomInt(100).toString() : req.subId;
+                        // Adds a typed JSON document in a specific index, making it searchable.
+                        // If a document with the same index, type, and id already exists, an error will occur.
+                        client.create({
+                            index: 'myindex',
+                            type: 'mytype',
+                            id: req_id,
+                            body: {
+                                name: req.body.data.container1.key621,
+                                age: req.body.data.container1.key34,
+                                info: req.body.data.container1.key780
+                            }
+                        }, function (err, value) {
+                            if (err) {
+                                return res.status(400).json(err);
+                            }
+
+                            // Reset the value to what the create returns.
+                            //req.body.data = value;
+                            next();
+                        });
+                    } else {
+                        next();
+                    }
+                }
+            });
+        } else {
+            next();
+        }
 
 
         // Get a typed JSON document from the index based on its id.
