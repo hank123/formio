@@ -60,11 +60,7 @@ module.exports = function(router) {
                             index: 'myindex',
                             type: 'mytype',
                             id: req_id,
-                            body: {
-                                name: req.body.data.container1.key621,
-                                age: req.body.data.container1.key34,
-                                info: req.body.data.container1.key780
-                            }
+                            body: req.body.data.container1
                         }, function (err, value) {
                             if (err) {
                                 return res.status(400).json(err);
