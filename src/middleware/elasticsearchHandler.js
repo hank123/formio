@@ -52,7 +52,7 @@ module.exports = function(router) {
                     //req.body.data = value;
                     next();
                 } else {
-                    if (req.body.data.container1 != null) {
+                    if (req.body.data != null) {
                         var req_id = (req.subId == null || req.subId == '') ? randomInt(100).toString() : req.subId;
                         // Adds a typed JSON document in a specific index, making it searchable.
                         // If a document with the same index, type, and id already exists, an error will occur.
@@ -60,7 +60,7 @@ module.exports = function(router) {
                             index: 'myindex',
                             type: 'mytype',
                             id: req_id,
-                            body: req.body.data.container1
+                            body: req.body.data
                         }, function (err, value) {
                             if (err) {
                                 return res.status(400).json(err);
