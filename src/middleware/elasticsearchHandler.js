@@ -78,22 +78,6 @@ module.exports = function(router) {
         } else {
             next();
         }
-
-
-        // Get a typed JSON document from the index based on its id.
-        client.get({
-            index: 'myindex',
-            type: 'mytype',
-            id: '101'
-        }, function (err, value) {
-            if (err) {
-                //return res.status(400).json(err);
-            }
-
-            // Reset the value to what the create returns.
-            //req.body.data = value;
-        });
-
     };
 };
 
