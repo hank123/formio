@@ -41,40 +41,182 @@ module.exports = function(router) {
         });
 
         if (req.method === 'POST' || req.method === 'PUT') {
-            // Returns a boolean indicating whether or not a given document exists.
-            client.exists({
-                index: 'myindex',
-                type: 'mytype',
-                id: req.subId
-            }, function (error, exists, value) {
-                if (exists === true && req.subId != null && req.subId != '') {
-                    //return res.status(400).send('Could not create the same Forms data.');
-                    //req.body.data = value;
-                    next();
-                } else {
-                    if (req.body.data != null) {
-                        var req_id = (req.subId == null || req.subId == '') ? randomInt(100).toString() : req.subId;
-                        // Adds a typed JSON document in a specific index, making it searchable.
-                        // If a document with the same index, type, and id already exists, an error will occur.
-                        client.create({
-                            index: 'myindex',
-                            type: 'mytype',
-                            id: req_id,
-                            body: req.body.data
-                        }, function (err, value) {
-                            if (err) {
-                                return res.status(400).json(err);
-                            }
+            var originalUrl = req.originalUrl;
+            if (originalUrl.indexOf('/user/login/submission') >= 0) {
+                next();
+            } else {
+                var request = require('request');
+                var formId = req.formId;
+                var data = req.body.data;
+                if (formId == '590ad7d0ec345b0267877fa3') {
+                    // "title" : "Patient MRN Record"
+                    if (data.gender == 'F') {
+                        data.gender = 'Female';
+                    } else if (data.gender == 'M') {
+                        data.gender = 'Male';
+                    }
 
-                            // Reset the value to what the create returns.
-                            //req.body.data = value;
-                            next();
+                    if (data.smokingStatus == "0") {
+                        data.smokingStatus = 'Non-smoker';
+                    } else if (data.smokingStatus == "1") {
+                        data.smokingStatus = 'Smoker';
+                    }
+
+                    var v_params = {MRN: data.mrn, name: data.name, DOB: data.dob, age: data.age, gender: data.gender, zipcode: data.zipCode, phoneNumber: data.phoneNumber, preferredLanguage: data.preferredLanguage, smokingStatus: data.smokingStatus};
+                    //alert('params: ' + JSON.stringify(params));
+
+                    if (req.method === 'POST') {
+                        var g_url = "http://101.37.36.41:3020/api/patients?MRN=" + data.mrn;
+                        request.get({
+                            headers: {'content-type' : 'application/json'},
+                            url:     g_url
+                        }, function(error, response, body) {
+                            var v_resp = JSON.parse(response.body);
+                            console.log('response: ' + v_resp);
+
+                            var v_resp_len = v_resp.length;
+                            console.log('v_resp_len: ' + v_resp_len);
+
+                            if (v_resp_len == 0) {
+                                var url = "http://101.37.36.41:3020/api/patients";
+                                request.post({
+                                    headers: {'content-type': 'application/json'},
+                                    url: url,
+                                    body: JSON.stringify(v_params)
+                                }, function (error, response, body) {
+                                    console.log(body);
+                                });
+                            }
                         });
-                    } else {
-                        next();
+                    } else if (req.method === 'PUT') {
+                        var g_url = "http://101.37.36.41:3020/api/patients?MRN=" + data.mrn;
+                        request.get({
+                            headers: {'content-type' : 'application/json'},
+                            url:     g_url
+                        }, function(error, response, body){
+                            var v_resp = JSON.parse(response.body);
+                            console.log('response: ' + v_resp);
+
+                            var v_resp_0 = v_resp[0];
+                            console.log('response[0]: ' + v_resp_0);
+
+                            //var _id = JSON.stringify(v_resp_0._id);
+                            var _id = v_resp_0._id;
+                            _id = _id.replace('\"', '');
+                            console.log('_id: ' + _id);
+
+                            var url = "http://101.37.36.41:3020/api/patients/" + _id;
+                            //var url = "http://101.37.36.41:3020/api/patients";
+                            request.put({
+                                headers: {'content-type' : 'application/json'},
+                                url:     url,
+                                body:    JSON.stringify(v_params)
+                            }, function(error, response, body){
+                                console.log(body);
+                            });
+                        });
+                    }
+                } else if (formId == '590af0227098ac037cfe27b0') {
+                    // "title" : "Patient Diagnostic Record"
+                    if (data.diagnosticPeriod == '0') {
+                        data.diagnosticPeriod = '12/03/2013 - 12/06/2013';
+                    } else if (data.diagnosticPeriod == '1') {
+                        data.diagnosticPeriod = '12/06/2013 - 12/09/2013';
+                    } else if (data.diagnosticPeriod == '2') {
+                        data.diagnosticPeriod = '12/09/2013 - 12/12/2013';
+                    }
+
+                    var v_params = {MRN: data.mrn, name: data.name, diagnosticPeriod: data.diagnosticPeriod, encounterType: data.encounterType, visitReason: data.visitReason, physician: data.physician, weight: data.weight, height: data.height, BMI: data.bmi, temperature: data.temperature, bloodPressure: data.bloodPressure, pulse: data.pulse, respiratoryRate: data.respiratoryRate};
+                    //alert('params: ' + JSON.stringify(params));
+
+                    if (req.method === 'POST') {
+                        var g_url = "http://101.37.36.41:3020/api/diagnostics?MRN=" + data.mrn;
+                        request.get({
+                            headers: {'content-type' : 'application/json'},
+                            url:     g_url
+                        }, function(error, response, body) {
+                            var v_resp = JSON.parse(response.body);
+                            console.log('response: ' + v_resp);
+
+                            var v_resp_len = v_resp.length;
+                            console.log('v_resp_len: ' + v_resp_len);
+
+                            if (v_resp_len == 0) {
+                                var url = "http://101.37.36.41:3020/api/diagnostics";
+                                request.post({
+                                    headers: {'content-type' : 'application/json'},
+                                    url:     url,
+                                    body:    JSON.stringify(v_params)
+                                }, function(error, response, body) {
+                                    console.log(body);
+                                });
+                            }
+                        });
+                    } else if (req.method === 'PUT') {
+                        var g_url = "http://101.37.36.41:3020/api/diagnostics?MRN=" + data.mrn;
+                        request.get({
+                            headers: {'content-type' : 'application/json'},
+                            url:     g_url
+                        }, function(error, response, body){
+                            var v_resp = JSON.parse(response.body);
+                            console.log('response: ' + v_resp);
+
+                            var v_resp_0 = v_resp[0];
+                            console.log('response[0]: ' + v_resp_0);
+
+                            //var _id = JSON.stringify(v_resp_0._id);
+                            var _id = v_resp_0._id;
+                            _id = _id.replace('\"', '');
+                            console.log('_id: ' + _id);
+
+                            var url = "http://101.37.36.41:3020/api/diagnostics/" + _id;
+                            //var url = "http://101.37.36.41:3020/api/diagnostics";
+                            request.put({
+                                headers: {'content-type' : 'application/json'},
+                                url:     url,
+                                body:    JSON.stringify(v_params)
+                            }, function(error, response, body){
+                                console.log(body);
+                            });
+                        });
                     }
                 }
-            });
+
+                // Returns a boolean indicating whether or not a given document exists.
+                client.exists({
+                    index: 'myindex',
+                    type: 'mytype',
+                    id: req.subId
+                }, function (error, exists, value) {
+                    if (exists === true && req.subId != null && req.subId != '') {
+                        //return res.status(400).send('Could not create the same Forms data.');
+                        //req.body.data = value;
+                        next();
+                    } else {
+                        if (req.body.data != null) {
+                            var req_id = (req.subId == null || req.subId == '') ? randomInt(100).toString() : req.subId;
+                            // Adds a typed JSON document in a specific index, making it searchable.
+                            // If a document with the same index, type, and id already exists, an error will occur.
+                            client.create({
+                                index: 'myindex',
+                                type: 'mytype',
+                                id: req_id,
+                                body: req.body.data
+                            }, function (err, value) {
+                                if (err) {
+                                    return res.status(400).json(err);
+                                }
+
+                                // Reset the value to what the create returns.
+                                //req.body.data = value;
+                                next();
+                            });
+                        } else {
+                            next();
+                        }
+                    }
+                });
+            }
         } else {
             next();
         }
