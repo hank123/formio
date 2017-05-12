@@ -130,7 +130,7 @@ module.exports = function(router) {
                             e_diagnosticPeriod = '2013年09月12日 - 2013年12月12日';
                         }
 
-                        var v_params = {MRN: data.mrn, name: data.name, diagnosticPeriod: e_diagnosticPeriod, encounterType: data.encounterType, visitReason: data.visitReason, physician: data.physician, weight: data.weight, height: data.height, BMI: data.bmi, temperature: data.temperature, bloodPressure: data.bloodPressure, pulse: data.pulse, respiratoryRate: data.respiratoryRate};
+                        var v_params = {MRN: data.mrn, name: data.name, diagnosticPeriod: e_diagnosticPeriod, encounterType: data.encounterType, visitReason: data.visitReason, physician: data.physician, facility: data.facility, weight: data.weight, height: data.height, BMI: data.bmi, temperature: data.temperature, bloodPressure: data.bloodPressure, pulse: data.pulse, respiratoryRate: data.respiratoryRate};
                         //alert('params: ' + JSON.stringify(params));
 
                         if (req.method === 'POST') {
